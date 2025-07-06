@@ -42,10 +42,12 @@ pub fn find_project_root() -> Result<PathBuf> {
     Err(anyhow!("Could not find project root"))
 }
 
+#[allow(dead_code)]
 pub fn is_wasm_file(path: &Path) -> bool {
-    path.extension().map_or(false, |ext| ext == "wasm")
+    path.extension().is_some_and(|ext| ext == "wasm")
 }
 
+#[allow(dead_code)]
 pub fn format_size(bytes: u64) -> String {
     const UNITS: &[&str] = &["B", "KB", "MB", "GB"];
     let mut size = bytes as f64;
@@ -63,6 +65,7 @@ pub fn format_size(bytes: u64) -> String {
     }
 }
 
+#[allow(dead_code)]
 pub fn get_wasm_info(path: &Path) -> Result<WasmInfo> {
     let wasm_bytes = std::fs::read(path)?;
     let parser = wasmparser::Parser::new(0);
@@ -120,6 +123,7 @@ pub fn get_wasm_info(path: &Path) -> Result<WasmInfo> {
     Ok(info)
 }
 
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct WasmInfo {
     pub size: usize,
@@ -129,6 +133,7 @@ pub struct WasmInfo {
     pub sections: Vec<String>,
 }
 
+#[allow(dead_code)]
 pub fn create_progress_bar(len: u64, message: &str) -> indicatif::ProgressBar {
     use indicatif::{ProgressBar, ProgressStyle};
 
@@ -145,6 +150,7 @@ pub fn create_progress_bar(len: u64, message: &str) -> indicatif::ProgressBar {
     pb
 }
 
+#[allow(dead_code)]
 pub fn validate_component_name(name: &str) -> Result<()> {
     if name.is_empty() {
         return Err(anyhow!("Component name cannot be empty"));

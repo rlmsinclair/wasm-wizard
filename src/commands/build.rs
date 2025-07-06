@@ -5,7 +5,7 @@ use anyhow::{anyhow, Result};
 use async_trait::async_trait;
 use colored::*;
 use indicatif::{ProgressBar, ProgressStyle};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::Duration;
 
 #[async_trait]
@@ -54,7 +54,7 @@ impl Command for super::BuildCommand {
 }
 
 impl super::BuildCommand {
-    async fn build_component(&self, project_root: &PathBuf) -> Result<()> {
+    async fn build_component(&self, project_root: &Path) -> Result<()> {
         let cargo_toml = project_root.join("Cargo.toml");
 
         if cargo_toml.exists() {
@@ -80,7 +80,7 @@ impl super::BuildCommand {
         Ok(())
     }
 
-    async fn optimize_component(&self, project_root: &PathBuf) -> Result<()> {
+    async fn optimize_component(&self, project_root: &Path) -> Result<()> {
         let wasm_file = self.find_wasm_output(project_root)?;
         let optimizer = Optimizer::new();
 
@@ -96,7 +96,7 @@ impl super::BuildCommand {
         Ok(())
     }
 
-    fn find_wasm_output(&self, project_root: &PathBuf) -> Result<PathBuf> {
+    fn find_wasm_output(&self, project_root: &Path) -> Result<PathBuf> {
         let target_dir = project_root.join("target/wasm32-wasip1");
         let build_dir = if self.target == "release" {
             target_dir.join("release")
@@ -109,7 +109,7 @@ impl super::BuildCommand {
         for entry in entries {
             let entry = entry?;
             let path = entry.path();
-            if path.extension().map_or(false, |ext| ext == "wasm") {
+            if path.extension().is_some_and(|ext| ext == "wasm") {
                 return Ok(path);
             }
         }
@@ -117,7 +117,7 @@ impl super::BuildCommand {
         Err(anyhow!("No WASM output found in {}", build_dir.display()))
     }
 
-    async fn show_build_summary(&self, project_root: &PathBuf) -> Result<()> {
+    async fn show_build_summary(&self, project_root: &Path) -> Result<()> {
         if let Ok(wasm_file) = self.find_wasm_output(project_root) {
             let metadata = std::fs::metadata(&wasm_file)?;
             let size = metadata.len();

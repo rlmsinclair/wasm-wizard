@@ -36,7 +36,7 @@ impl Command for super::ComposeCommand {
             .compose_components(
                 &self.components,
                 &self.output,
-                self.config.as_ref().map(|p| p.as_path()),
+                self.config.as_deref(),
             )
             .await?;
 

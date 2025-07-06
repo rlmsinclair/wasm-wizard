@@ -37,7 +37,7 @@ impl Optimizer {
         cmd.arg(&level_flag).arg(input).arg("-o").arg(output);
 
         // Add common optimizations
-        cmd.args(&[
+        cmd.args([
             "--enable-bulk-memory",
             "--enable-reference-types",
             "--enable-simd",

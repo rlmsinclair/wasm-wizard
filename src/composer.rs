@@ -173,25 +173,21 @@ impl Composer {
         for payload in parser.parse_all(&wasm_bytes) {
             match payload {
                 Ok(wasmparser::Payload::ImportSection(reader)) => {
-                    for import in reader {
-                        if let Ok(import) = import {
-                            analysis.imports.push(ImportInfo {
-                                module: import.module.to_string(),
-                                name: import.name.to_string(),
-                                ty: format!("{:?}", import.ty),
-                            });
-                        }
+                    for import in reader.into_iter().flatten() {
+                        analysis.imports.push(ImportInfo {
+                            module: import.module.to_string(),
+                            name: import.name.to_string(),
+                            ty: format!("{:?}", import.ty),
+                        });
                     }
                 }
                 Ok(wasmparser::Payload::ExportSection(reader)) => {
-                    for export in reader {
-                        if let Ok(export) = export {
-                            analysis.exports.push(ExportInfo {
-                                name: export.name.to_string(),
-                                ty: format!("{:?}", export.kind),
-                                index: export.index,
-                            });
-                        }
+                    for export in reader.into_iter().flatten() {
+                        analysis.exports.push(ExportInfo {
+                            name: export.name.to_string(),
+                            ty: format!("{:?}", export.kind),
+                            index: export.index,
+                        });
                     }
                 }
                 _ => {}
@@ -231,6 +227,7 @@ impl Composer {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct ComponentAnalysis {
     path: PathBuf,
     imports: Vec<ImportInfo>,
@@ -239,6 +236,7 @@ struct ComponentAnalysis {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct ImportInfo {
     module: String,
     name: String,
@@ -246,6 +244,7 @@ struct ImportInfo {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct ExportInfo {
     name: String,
     ty: String,
@@ -253,6 +252,7 @@ struct ExportInfo {
 }
 
 #[derive(Debug)]
+#[allow(dead_code)]
 struct FunctionInfo {
     name: String,
     signature: String,

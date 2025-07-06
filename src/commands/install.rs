@@ -49,6 +49,7 @@ impl Command for super::InstallCommand {
 struct ToolInfo {
     description: &'static str,
     install_cmd: &'static str,
+    #[allow(dead_code)]
     check_cmd: &'static str,
 }
 

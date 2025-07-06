@@ -11,6 +11,7 @@ pub struct Scaffolder {
 }
 
 struct TemplateInfo {
+    #[allow(dead_code)]
     description: String,
     files: Vec<TemplateFile>,
 }
