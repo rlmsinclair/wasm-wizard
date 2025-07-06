@@ -23,7 +23,7 @@ impl Guest for Component {
         match n {
             0 => 0,
             1 => 1,
-            _ => fibonacci(n - 1) + fibonacci(n - 2),
+            _ => Self::fibonacci(n - 1) + Self::fibonacci(n - 2),
         }
     }
     
