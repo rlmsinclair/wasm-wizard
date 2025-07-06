@@ -254,6 +254,11 @@ export const world = {
         init_git: bool,
         install_deps: bool,
     ) -> Result<()> {
+        // Handle special minimal template
+        if template == "minimal" {
+            return self.create_minimal_project(name, target_path, init_git).await;
+        }
+
         let template_key = format!("{language}-{template}");
 
         let template_info = self.templates.get(&template_key).ok_or_else(|| {
@@ -341,6 +346,45 @@ export const world = {
                 run_command("npm", &["install"], Some(path)).await?;
             }
             _ => {}
+        }
+
+        Ok(())
+    }
+
+    async fn create_minimal_project(&self, name: &str, target_path: &Path, init_git: bool) -> Result<()> {
+        // Create target directory
+        fs::create_dir_all(target_path)?;
+
+        // Create the minimal demo HTML file
+        let demo_content = include_str!("../templates/minimal/demo.html")
+            .replace("{{name}}", name);
+
+        fs::write(target_path.join("demo.html"), demo_content)?;
+
+        // Create build.sh
+        let build_content = include_str!("../templates/minimal/build.sh");
+        let build_path = target_path.join("build.sh");
+        fs::write(&build_path, build_content)?;
+
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mut perms = fs::metadata(&build_path)?.permissions();
+            perms.set_mode(0o755);
+            fs::set_permissions(&build_path, perms)?;
+        }
+
+        // Create wasm-wizard.toml
+        let toml_content = include_str!("../templates/minimal/wasm-wizard.toml")
+            .replace("{{name}}", name);
+        fs::write(target_path.join("wasm-wizard.toml"), toml_content)?;
+
+        // Create .gitignore
+        fs::write(target_path.join(".gitignore"), "*.pyc\n__pycache__/\n")?;
+
+        // Initialize git repository if requested
+        if init_git {
+            self.init_git(target_path).await?;
         }
 
         Ok(())

@@ -19,7 +19,12 @@ impl Command for super::NewCommand {
             self.name.bright_cyan()
         );
         println!("{} {}", "   Template:".bright_blue(), self.template);
-        println!("{} {}", "   Language:".bright_blue(), self.language);
+        
+        // Don't show language for minimal template
+        if self.template != "minimal" {
+            println!("{} {}", "   Language:".bright_blue(), self.language);
+        }
+        
         println!("{} {}", "   Path:".bright_blue(), target_path.display());
         println!();
 
