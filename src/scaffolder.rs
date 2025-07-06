@@ -274,7 +274,8 @@ export const world = {
         match language {
             "rust" => {
                 // Add wasm32-wasip1 target if not present
-                let _ = run_command("rustup", &["target", "add", "wasm32-wasip1"], Some(path)).await;
+                let _ =
+                    run_command("rustup", &["target", "add", "wasm32-wasip1"], Some(path)).await;
             }
             "javascript" | "typescript" => {
                 run_command("npm", &["install"], Some(path)).await?;
