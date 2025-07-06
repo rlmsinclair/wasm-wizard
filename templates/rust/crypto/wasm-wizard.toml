@@ -1,0 +1,15 @@
+# WASM Wizard Configuration
+[project]
+name = "{{name}}"
+version = "0.1.0"
+template = "crypto"
+
+[build]
+tool = "wasm-pack"
+target = "web"
+optimize = true
+
+[optimize]
+level = 3
+strip_debug = true
+lto = true

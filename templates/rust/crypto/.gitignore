@@ -1,0 +1,6 @@
+/target
+/pkg
+/wasm-pack.log
+Cargo.lock
+.DS_Store
+*.wasm.map

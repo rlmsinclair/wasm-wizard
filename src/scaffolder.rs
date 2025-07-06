@@ -72,6 +72,62 @@ impl Scaffolder {
 
         self.templates.insert("rust-basic".to_string(), rust_basic);
 
+        // Crypto/Performance template
+        let mut rust_crypto = TemplateInfo {
+            description: "High-performance cryptographic WebAssembly component".to_string(),
+            files: vec![],
+        };
+
+        rust_crypto.files.push(TemplateFile {
+            path: "Cargo.toml".to_string(),
+            content: include_str!("../templates/rust/crypto/Cargo.toml").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "src/lib.rs".to_string(),
+            content: include_str!("../templates/rust/crypto/src/lib.rs").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "build.sh".to_string(),
+            content: include_str!("../templates/rust/crypto/build.sh").to_string(),
+            executable: true,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "demo.html".to_string(),
+            content: include_str!("../templates/rust/crypto/demo.html").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "README.md".to_string(),
+            content: include_str!("../templates/rust/crypto/README.md").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "wit/world.wit".to_string(),
+            content: include_str!("../templates/rust/crypto/wit/world.wit").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: "wasm-wizard.toml".to_string(),
+            content: include_str!("../templates/rust/crypto/wasm-wizard.toml").to_string(),
+            executable: false,
+        });
+
+        rust_crypto.files.push(TemplateFile {
+            path: ".gitignore".to_string(),
+            content: include_str!("../templates/rust/crypto/.gitignore").to_string(),
+            executable: false,
+        });
+
+        self.templates.insert("rust-crypto".to_string(), rust_crypto);
+
         // Add more templates...
         self.load_javascript_templates();
         self.load_typescript_templates();
