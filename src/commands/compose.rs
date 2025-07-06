@@ -33,11 +33,7 @@ impl Command for super::ComposeCommand {
 
         pb.set_message("Composing components...");
         composer
-            .compose_components(
-                &self.components,
-                &self.output,
-                self.config.as_deref(),
-            )
+            .compose_components(&self.components, &self.output, self.config.as_deref())
             .await?;
 
         // Optimize if requested
