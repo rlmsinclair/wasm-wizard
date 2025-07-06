@@ -1,0 +1,28 @@
+[project]
+name = "{{name}}"
+language = "rust"
+template = "basic"
+version = "0.1.0"
+
+[build]
+target = "wasm32-wasi"
+optimization_level = 3
+strip_debug = true
+enable_bulk_memory = true
+enable_reference_types = true
+
+[dev]
+port = 8080
+hot_reload = true
+watch_paths = ["src/**/*", "wit/**/*"]
+
+[composition]
+output_format = "component"
+enable_optimization = true
+
+[toolchain]
+required_tools = [
+    "wasm-tools",
+    "wasm-opt",
+    "wit-bindgen",
+]

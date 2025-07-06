@@ -1,0 +1,129 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            name: wasm-wizard-linux-x64
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            name: wasm-wizard-linux-arm64
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            name: wasm-wizard-darwin-x64
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            name: wasm-wizard-darwin-arm64
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            name: wasm-wizard-win32-x64.exe
+          - target: aarch64-pc-windows-msvc
+            os: windows-latest
+            name: wasm-wizard-win32-arm64.exe
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        target: ${{ matrix.target }}
+        override: true
+    
+    - name: Install cross (Linux ARM64)
+      if: matrix.target == 'aarch64-unknown-linux-gnu'
+      run: cargo install cross
+    
+    - name: Build
+      run: |
+        if [ "${{ matrix.target }}" = "aarch64-unknown-linux-gnu" ]; then
+          cross build --release --target ${{ matrix.target }}
+        else
+          cargo build --release --target ${{ matrix.target }}
+        fi
+      shell: bash
+    
+    - name: Package
+      run: |
+        cd target/${{ matrix.target }}/release
+        if [ "${{ matrix.os }}" = "windows-latest" ]; then
+          cp wasm-wizard.exe ${{ matrix.name }}
+        else
+          cp wasm-wizard ${{ matrix.name }}
+        fi
+      shell: bash
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ matrix.name }}
+        path: target/${{ matrix.target }}/release/${{ matrix.name }}
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Download all artifacts
+      uses: actions/download-artifact@v3
+    
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          wasm-wizard-linux-x64/wasm-wizard-linux-x64
+          wasm-wizard-linux-arm64/wasm-wizard-linux-arm64
+          wasm-wizard-darwin-x64/wasm-wizard-darwin-x64
+          wasm-wizard-darwin-arm64/wasm-wizard-darwin-arm64
+          wasm-wizard-win32-x64.exe/wasm-wizard-win32-x64.exe
+          wasm-wizard-win32-arm64.exe/wasm-wizard-win32-arm64.exe
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  publish-cargo:
+    needs: release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Install Rust
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+    
+    - name: Publish to crates.io
+      run: cargo publish --token ${{ secrets.CARGO_TOKEN }}
+
+  publish-npm:
+    needs: release
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        registry-url: 'https://registry.npmjs.org'
+    
+    - name: Publish to npm
+      run: npm publish
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

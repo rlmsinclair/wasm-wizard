@@ -1,0 +1,57 @@
+[package]
+name = "wasm-wizard"
+version = "0.1.0"
+edition = "2021"
+description = "A CLI tool that makes WebAssembly Component Model ridiculously easy to use"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/your-username/wasm-wizard"
+homepage = "https://github.com/your-username/wasm-wizard"
+keywords = ["wasm", "webassembly", "component-model", "cli", "tooling"]
+categories = ["development-tools", "command-line-utilities", "wasm"]
+authors = ["Your Name <your.email@example.com>"]
+readme = "README.md"
+exclude = ["tests/*", "examples/*"]
+
+[[bin]]
+name = "wasm-wizard"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4.4", features = ["derive", "color"] }
+anyhow = "1.0"
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+toml = "0.8"
+handlebars = "4.4"
+walkdir = "2.4"
+colored = "2.0"
+indicatif = "0.17"
+dialoguer = "0.11"
+reqwest = { version = "0.11", features = ["json"] }
+tempfile = "3.8"
+which = "4.4"
+sha2 = "0.10"
+hex = "0.4"
+flate2 = "1.0"
+tar = "0.4"
+wasmparser = "0.116"
+wasm-compose = "0.5"
+wit-parser = "0.13"
+wit-component = "0.18"
+async-trait = "0.1"
+chrono = { version = "0.4", features = ["serde"] }
+
+[dev-dependencies]
+assert_cmd = "2.0"
+predicates = "3.0"
+tempfile = "3.8"
+
+[build-dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

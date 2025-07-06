@@ -1,0 +1,16 @@
+package {{name}}:component@0.1.0;
+
+/// A basic WebAssembly component demonstrating common patterns
+world {{name}} {
+    /// Greet a person by name
+    export greet: func(name: string) -> string;
+    
+    /// Calculate the sum of two numbers
+    export calculate: func(a: s32, b: s32) -> s32;
+    
+    /// Calculate the nth Fibonacci number
+    export fibonacci: func(n: u32) -> u32;
+    
+    /// Reverse a string
+    export reverse-string: func(input: string) -> string;
+}
