@@ -195,7 +195,7 @@ export const world = {
         init_git: bool,
         install_deps: bool,
     ) -> Result<()> {
-        let template_key = format!("{}-{}", language, template);
+        let template_key = format!("{language}-{template}");
 
         let template_info = self.templates.get(&template_key).ok_or_else(|| {
             anyhow!(

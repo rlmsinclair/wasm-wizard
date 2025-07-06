@@ -87,8 +87,8 @@ impl super::ComposeCommand {
                 }
             }
 
-            println!("  📥 Imports: {}", import_count);
-            println!("  📤 Exports: {}", export_count);
+            println!("  📥 Imports: {import_count}");
+            println!("  📤 Exports: {export_count}");
         }
 
         Ok(())

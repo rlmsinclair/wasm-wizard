@@ -102,7 +102,7 @@ async fn install_tool(tool: &str, info: &ToolInfo) -> Result<()> {
     }
 
     run_command(parts[0], &parts[1..], None).await?;
-    println!("✅ {} installed successfully", tool);
+    println!("✅ {tool} installed successfully");
     Ok(())
 }
 

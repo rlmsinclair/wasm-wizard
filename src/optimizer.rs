@@ -31,7 +31,7 @@ impl Optimizer {
         output: &Path,
         level: u8,
     ) -> Result<()> {
-        let level_flag = format!("-O{}", level);
+        let level_flag = format!("-O{level}");
 
         let mut cmd = Command::new(wasm_opt);
         cmd.arg(&level_flag).arg(input).arg("-o").arg(output);
@@ -53,7 +53,7 @@ impl Optimizer {
             return Err(anyhow!("wasm-opt failed: {}", stderr));
         }
 
-        println!("✅ Optimized with wasm-opt (level {})", level);
+        println!("✅ Optimized with wasm-opt (level {level})");
         Ok(())
     }
 
