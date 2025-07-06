@@ -134,7 +134,8 @@ world {{name}} {
             executable: false,
         });
 
-        self.templates.insert("javascript-basic".to_string(), js_basic);
+        self.templates
+            .insert("javascript-basic".to_string(), js_basic);
     }
 
     fn load_typescript_templates(&mut self) {
@@ -183,7 +184,8 @@ export const world = {
             executable: false,
         });
 
-        self.templates.insert("typescript-basic".to_string(), ts_basic);
+        self.templates
+            .insert("typescript-basic".to_string(), ts_basic);
     }
 
     pub async fn create_project(
