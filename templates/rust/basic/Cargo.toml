@@ -7,12 +7,7 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-wit-bindgen = "0.15"
-
-[dependencies.wit-bindgen]
-version = "0.15"
-default-features = false
-features = ["macros"]
+wit-bindgen = { version = "0.15", default-features = false, features = ["macros"] }
 
 [package.metadata.component]
 package = "{{name}}:component"
