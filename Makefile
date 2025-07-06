@@ -51,7 +51,7 @@ test-cli: build
 # Install development dependencies
 dev-deps:
 	cargo install cargo-watch
-	rustup target add wasm32-wasi
+	rustup target add wasm32-wasip1
 
 # Check that everything is ready for release
 check-release: fmt lint test

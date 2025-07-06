@@ -27,61 +27,61 @@ impl Scaffolder {
             handlebars: Handlebars::new(),
             templates: HashMap::new(),
         };
-        
+
         scaffolder.load_templates();
         scaffolder
     }
-    
+
     fn load_templates(&mut self) {
         // Basic Rust template
         let mut rust_basic = TemplateInfo {
             description: "Basic Rust WebAssembly component".to_string(),
             files: vec![],
         };
-        
+
         rust_basic.files.push(TemplateFile {
             path: "Cargo.toml".to_string(),
             content: include_str!("../templates/rust/basic/Cargo.toml").to_string(),
             executable: false,
         });
-        
+
         rust_basic.files.push(TemplateFile {
             path: "src/lib.rs".to_string(),
             content: include_str!("../templates/rust/basic/src/lib.rs").to_string(),
             executable: false,
         });
-        
+
         rust_basic.files.push(TemplateFile {
             path: "wit/world.wit".to_string(),
             content: include_str!("../templates/rust/basic/wit/world.wit").to_string(),
             executable: false,
         });
-        
+
         rust_basic.files.push(TemplateFile {
             path: "wasm-wizard.toml".to_string(),
             content: include_str!("../templates/rust/basic/wasm-wizard.toml").to_string(),
             executable: false,
         });
-        
+
         rust_basic.files.push(TemplateFile {
             path: ".gitignore".to_string(),
             content: include_str!("../templates/rust/basic/.gitignore").to_string(),
             executable: false,
         });
-        
+
         self.templates.insert("rust-basic".to_string(), rust_basic);
-        
+
         // Add more templates...
         self.load_javascript_templates();
         self.load_typescript_templates();
     }
-    
+
     fn load_javascript_templates(&mut self) {
         let mut js_basic = TemplateInfo {
             description: "Basic JavaScript WebAssembly component".to_string(),
             files: vec![],
         };
-        
+
         js_basic.files.push(TemplateFile {
             path: "package.json".to_string(),
             content: r#"{
@@ -100,7 +100,7 @@ impl Scaffolder {
 }"#.to_string(),
             executable: false,
         });
-        
+
         js_basic.files.push(TemplateFile {
             path: "src/{{name}}.js".to_string(),
             content: r#"// {{name}} WebAssembly Component
@@ -115,10 +115,11 @@ export const world = {
     return a + b;
   }
 };
-"#.to_string(),
+"#
+            .to_string(),
             executable: false,
         });
-        
+
         js_basic.files.push(TemplateFile {
             path: "wit/world.wit".to_string(),
             content: r#"package {{name}}:component;
@@ -127,20 +128,21 @@ world {{name}} {
   export greet: func(name: string) -> string;
   export calculate: func(a: s32, b: s32) -> s32;
 }
-"#.to_string(),
+"#
+            .to_string(),
             executable: false,
         });
-        
+
         self.templates.insert("js-basic".to_string(), js_basic);
     }
-    
+
     fn load_typescript_templates(&mut self) {
         // Similar to JavaScript but with TypeScript setup
         let mut ts_basic = TemplateInfo {
             description: "Basic TypeScript WebAssembly component".to_string(),
             files: vec![],
         };
-        
+
         ts_basic.files.push(TemplateFile {
             path: "package.json".to_string(),
             content: r#"{
@@ -160,7 +162,7 @@ world {{name}} {
 }"#.to_string(),
             executable: false,
         });
-        
+
         ts_basic.files.push(TemplateFile {
             path: "src/{{name}}.ts".to_string(),
             content: r#"// {{name}} WebAssembly Component
@@ -175,13 +177,14 @@ export const world = {
     return a + b;
   }
 };
-"#.to_string(),
+"#
+            .to_string(),
             executable: false,
         });
-        
+
         self.templates.insert("ts-basic".to_string(), ts_basic);
     }
-    
+
     pub async fn create_project(
         &self,
         name: &str,
@@ -192,13 +195,18 @@ export const world = {
         install_deps: bool,
     ) -> Result<()> {
         let template_key = format!("{}-{}", language, template);
-        
-        let template_info = self.templates.get(&template_key)
-            .ok_or_else(|| anyhow!("Template '{}' not found for language '{}'", template, language))?;
-        
+
+        let template_info = self.templates.get(&template_key).ok_or_else(|| {
+            anyhow!(
+                "Template '{}' not found for language '{}'",
+                template,
+                language
+            )
+        })?;
+
         // Create target directory
         fs::create_dir_all(target_path)?;
-        
+
         // Create template context
         let context = json!({
             "name": name,
@@ -206,21 +214,21 @@ export const world = {
             "language": language,
             "year": chrono::Utc::now().format("%Y").to_string(),
         });
-        
+
         // Generate files
         for file in &template_info.files {
             let file_path = self.handlebars.render_template(&file.path, &context)?;
             let file_content = self.handlebars.render_template(&file.content, &context)?;
-            
+
             let full_path = target_path.join(&file_path);
-            
+
             // Create parent directories
             if let Some(parent) = full_path.parent() {
                 fs::create_dir_all(parent)?;
             }
-            
+
             fs::write(&full_path, file_content)?;
-            
+
             if file.executable {
                 #[cfg(unix)]
                 {
@@ -231,44 +239,49 @@ export const world = {
                 }
             }
         }
-        
+
         // Initialize git repository
         if init_git {
             self.init_git(target_path).await?;
         }
-        
+
         // Install dependencies
         if install_deps {
             self.install_dependencies(target_path, language).await?;
         }
-        
+
         Ok(())
     }
-    
+
     async fn init_git(&self, path: &Path) -> Result<()> {
         use crate::utils::run_command;
-        
+
         run_command("git", &["init"], Some(path)).await?;
         run_command("git", &["add", "."], Some(path)).await?;
-        run_command("git", &["commit", "-m", "Initial commit from wasm-wizard"], Some(path)).await?;
-        
+        run_command(
+            "git",
+            &["commit", "-m", "Initial commit from wasm-wizard"],
+            Some(path),
+        )
+        .await?;
+
         Ok(())
     }
-    
+
     async fn install_dependencies(&self, path: &Path, language: &str) -> Result<()> {
         use crate::utils::run_command;
-        
+
         match language {
             "rust" => {
-                // Add wasm32-wasi target if not present
-                let _ = run_command("rustup", &["target", "add", "wasm32-wasi"], Some(path)).await;
+                // Add wasm32-wasip1 target if not present
+                let _ = run_command("rustup", &["target", "add", "wasm32-wasip1"], Some(path)).await;
             }
             "javascript" | "typescript" => {
                 run_command("npm", &["install"], Some(path)).await?;
             }
             _ => {}
         }
-        
+
         Ok(())
     }
 }

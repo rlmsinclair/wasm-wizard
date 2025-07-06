@@ -7,7 +7,7 @@ use tempfile::TempDir;
 fn test_help_command() {
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
     cmd.arg("--help");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("wasm-wizard"))
@@ -18,7 +18,7 @@ fn test_help_command() {
 fn test_version_command() {
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
     cmd.arg("--version");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("wasm-wizard"));
@@ -28,7 +28,7 @@ fn test_version_command() {
 fn test_new_command() {
     let temp_dir = TempDir::new().unwrap();
     let project_path = temp_dir.path().join("test-project");
-    
+
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
     cmd.arg("new")
         .arg("test-project")
@@ -36,15 +36,15 @@ fn test_new_command() {
         .arg(&project_path)
         .arg("--no-git")
         .arg("--no-install");
-    
+
     cmd.assert().success();
-    
+
     // Check that files were created
     assert!(project_path.join("Cargo.toml").exists());
     assert!(project_path.join("src").exists());
     assert!(project_path.join("wit").exists());
     assert!(project_path.join("wasm-wizard.toml").exists());
-    
+
     // Check Cargo.toml content
     let cargo_toml = fs::read_to_string(project_path.join("Cargo.toml")).unwrap();
     assert!(cargo_toml.contains("test-project"));
@@ -54,7 +54,7 @@ fn test_new_command() {
 #[test]
 fn test_new_command_with_different_templates() {
     let temp_dir = TempDir::new().unwrap();
-    
+
     // Test JavaScript template
     let js_project_path = temp_dir.path().join("test-js-project");
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
@@ -66,13 +66,13 @@ fn test_new_command_with_different_templates() {
         .arg(&js_project_path)
         .arg("--no-git")
         .arg("--no-install");
-    
+
     cmd.assert().success();
-    
+
     // Check that JavaScript files were created
     assert!(js_project_path.join("package.json").exists());
     assert!(js_project_path.join("wit").exists());
-    
+
     // Check package.json content
     let package_json = fs::read_to_string(js_project_path.join("package.json")).unwrap();
     assert!(package_json.contains("test-js-project"));
@@ -82,9 +82,8 @@ fn test_new_command_with_different_templates() {
 #[test]
 fn test_analyze_command_with_nonexistent_file() {
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
-    cmd.arg("analyze")
-        .arg("nonexistent.wasm");
-    
+    cmd.arg("analyze").arg("nonexistent.wasm");
+
     cmd.assert().failure();
 }
 
@@ -92,7 +91,7 @@ fn test_analyze_command_with_nonexistent_file() {
 fn test_install_command_list() {
     let mut cmd = Command::cargo_bin("wasm-wizard").unwrap();
     cmd.arg("install");
-    
+
     cmd.assert()
         .success()
         .stdout(predicate::str::contains("Available tools"));

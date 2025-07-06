@@ -20,7 +20,9 @@ impl Command for super::OptimizeCommand {
         println!();
 
         let optimizer = Optimizer::new();
-        optimizer.optimize_file(&self.file, &output_file, self.level).await?;
+        optimizer
+            .optimize_file(&self.file, &output_file, self.level)
+            .await?;
 
         // Show optimization results
         let original_size = std::fs::metadata(&self.file)?.len();

@@ -94,27 +94,27 @@ wasm-wizard build
 wasm-wizard build --optimize
 
 # Or optimize a specific file
-wasm-wizard optimize target/wasm32-wasi/release/calculator.wasm
+wasm-wizard optimize target/wasm32-wasip1/release/calculator.wasm
 ```
 
 ## 5. Analyze Your Component
 
 ```bash
 # Get component information
-wasm-wizard analyze target/wasm32-wasi/release/calculator.wasm
+wasm-wizard analyze target/wasm32-wasip1/release/calculator.wasm
 
 # Detailed analysis
-wasm-wizard analyze target/wasm32-wasi/release/calculator.wasm --detailed
+wasm-wizard analyze target/wasm32-wasip1/release/calculator.wasm --detailed
 ```
 
 ## 6. Generate Bindings
 
 ```bash
 # Generate JavaScript bindings
-wasm-wizard bindings target/wasm32-wasi/release/calculator.wasm --language javascript
+wasm-wizard bindings target/wasm32-wasip1/release/calculator.wasm --language javascript
 
 # Generate TypeScript bindings
-wasm-wizard bindings target/wasm32-wasi/release/calculator.wasm --language typescript
+wasm-wizard bindings target/wasm32-wasip1/release/calculator.wasm --language typescript
 ```
 
 ## 7. Development Server
@@ -138,8 +138,8 @@ cd auth && wasm-wizard build --optimize && cd ..
 cd storage && wasm-wizard build --optimize && cd ..
 
 # Compose them
-wasm-wizard compose auth/target/wasm32-wasi/release/auth.wasm \
-                   storage/target/wasm32-wasi/release/storage.wasm \
+wasm-wizard compose auth/target/wasm32-wasip1/release/auth.wasm \
+                   storage/target/wasm32-wasip1/release/storage.wasm \
                    --output composed-app.wasm \
                    --optimize
 ```
@@ -151,7 +151,7 @@ wasm-wizard compose auth/target/wasm32-wasi/release/auth.wasm \
 wasm-wizard check --all
 
 # Check specific component
-wasm-wizard check target/wasm32-wasi/release/calculator.wasm
+wasm-wizard check target/wasm32-wasip1/release/calculator.wasm
 
 # Auto-fix issues
 wasm-wizard check --fix
@@ -208,7 +208,7 @@ language = "rust"
 version = "0.1.0"
 
 [build]
-target = "wasm32-wasi"
+target = "wasm32-wasip1"
 optimization_level = 3
 strip_debug = true
 

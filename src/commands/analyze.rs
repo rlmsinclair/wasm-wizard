@@ -8,19 +8,19 @@ impl Command for super::AnalyzeCommand {
     async fn execute(&self) -> Result<()> {
         println!("{}", "📊 Analyzing WASM component".bright_green().bold());
         println!("  Component: {}", self.component.display());
-        
+
         let metadata = std::fs::metadata(&self.component)?;
         let size = metadata.len();
-        
+
         println!();
         println!("{}", "Analysis Results:".bright_cyan().bold());
         println!("  📏 Size: {} bytes ({:.2} KB)", size, size as f64 / 1024.0);
-        
+
         // Analyze WASM structure
         if let Ok(wasm_bytes) = std::fs::read(&self.component) {
             let parser = wasmparser::Parser::new(0);
             let mut sections = Vec::new();
-            
+
             for payload in parser.parse_all(&wasm_bytes) {
                 match payload {
                     Ok(wasmparser::Payload::TypeSection(_)) => sections.push("Type"),
@@ -37,10 +37,10 @@ impl Command for super::AnalyzeCommand {
                     _ => {}
                 }
             }
-            
+
             println!("  📦 Sections: {}", sections.join(", "));
         }
-        
+
         Ok(())
     }
 }
