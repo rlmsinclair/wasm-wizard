@@ -126,7 +126,8 @@ impl Scaffolder {
             executable: false,
         });
 
-        self.templates.insert("rust-crypto".to_string(), rust_crypto);
+        self.templates
+            .insert("rust-crypto".to_string(), rust_crypto);
 
         // Add more templates...
         self.load_javascript_templates();
