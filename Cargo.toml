@@ -1,11 +1,11 @@
 [package]
 name = "wasm-wizard"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "A CLI tool that makes WebAssembly Component Model ridiculously easy to use"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/your-username/wasm-wizard"
-homepage = "https://github.com/your-username/wasm-wizard"
+repository = "https://github.com/rlmsinclair/wasm-wizard"
+homepage = "https://github.com/rlmsinclair/wasm-wizard"
 keywords = ["wasm", "webassembly", "component-model", "cli", "tooling"]
 categories = ["development-tools", "command-line-utilities", "wasm"]
 authors = ["Your Name <your.email@example.com>"]

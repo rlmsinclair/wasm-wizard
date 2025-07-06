@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2025-07-06
+
+### Fixed
+- Template registration for JavaScript and TypeScript languages
+- Clippy format string warnings across multiple modules
+- Updated copyright years to 2025
+
 ### Added
 - Initial implementation of WASM Wizard CLI
 - Project scaffolding with Rust, JavaScript, and TypeScript templates
@@ -47,7 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zero-copy operations where possible for performance
 - Cross-compilation support for all major platforms
 
-## [0.1.0] - 2024-07-06
+## [0.1.0] - 2025-07-06
 
 ### Added
 - Initial release of WASM Wizard
